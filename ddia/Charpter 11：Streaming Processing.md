@@ -87,7 +87,7 @@ UNIX的管道和TCP连接是常用的消息系统中生产者和消费者的通�
 
 每一条消息会被投递给所有的消费者，使得相互独立的consumer能够同时处理事件，确保事件能够准确，快速得被处理。
 
-![image-20181125192726372](/Users/liangquan/Library/Application Support/typora-user-images/image-20181125192726372.png)
+![image-20181125192726372](http://liang2020.oss-cn-hangzhou.aliyuncs.com/uPic/blog/image-20181125192726372.png)
 
 两种模式是可以结合的，例如对consumer进行分组，分组都会订阅同一个topic。消息会投递给所有的分组，不过每一个分组中只有一个节点会受到消息。
 
@@ -101,35 +101,11 @@ consumer可能在任何时间点宕机，消息被投递给consumer之后，cons
 
 
 
-![image-20181125195331905](/Users/liangquan/Library/Application Support/typora-user-images/image-20181125195331905.png)
+![image-20181125195331905](http://liang2020.oss-cn-hangzhou.aliyuncs.com/uPic/blog/image-20181125195331905.png)
 
 即使消息队列尝试保证消息处理的顺序性，负载均衡与消息重传机制结合必然导致事件处理顺序重排序。为了避免此类问题，可以考虑每一个队列使用一个consumer（牺牲了负载均衡机制），保证消息的顺序性。
 
 消息处理是否顺序，并不会影响各自独立的消息事件的处理。不过如果消息之间有严格的因果依赖，则消息系统需要保证消息的严格顺序，在后续的章节中我们会讨论这个问题。
-
-
-
-
-
-
-
-
-
-———————— 第二次递交 分割线———————— 
-
-———————— 第二次递交 分割线———————— 
-
-———————— 第二次递交 分割线———————— 
-
-
-
-
-
-
-
-
-
-
 
 ### 分区日志
 
@@ -153,7 +129,7 @@ consumer可能在任何时间点宕机，消息被投递给consumer之后，cons
 
 为了提供系统的吞吐，存储到单个磁盘的日志可以被分区存储到不同的磁盘。不同的分区日志也可以被分区存储到不同的机器上，每一块分区日志能够进行自己独立的读写操作。一个topic可以将多个分区聚合，他们进行类似消息的传递。参见下图。
 
-![image-20181216213554159](/Users/liangquan/Library/Application Support/typora-user-images/image-20181216213554159.png)
+![image-20181216213554159](http://liang2020.oss-cn-hangzhou.aliyuncs.com/uPic/blog/image-20181216213554159.png)
 
 Apache Kafka， Amazon Kinesis Stream，Twiiter的DistributedLog都是基于日志的消息系统。Google Cloud的Pub/Sub架构上也是类似，不过暴露的是类似JMS的API。这些消息系统虽然将所有的消息写入到磁盘，但是利用将日志进行分区到不同的服务器，依然能够达到百万级别每秒的消息的吞吐，并且能够通过日志复制实现高可用性。
 
@@ -210,16 +186,6 @@ consumer的消息消费的偏移类似之前章节Chapter5复制 中讨论的复
 
 
 
-———————— 第三次递交 分割线———————— 
-
-———————— 第三次递交 分割线———————— 
-
-———————— 第三次递交 分割线———————— 
-
-
-
-
-
 ## 数据库与流
 
 以上的讨论中，我们讨论了数据库与流的区别，流使用许多数据库中理念。本节中，我们会看看流处理技术在数据库中应用。
@@ -242,7 +208,7 @@ consumer的消息消费的偏移类似之前章节Chapter5复制 中讨论的复
 
 
 
-![image-20190101200753888](/Users/liangquan/Library/Application Support/typora-user-images/image-20190101200753888.png)
+![image-20190101200753888](http://liang2020.oss-cn-hangzhou.aliyuncs.com/uPic/blog/image-20190101200753888.png)
 
 如果没有并发写入检测机制，例如之前章节的版本向量，对应的并发写入冲突我们甚而完全无法觉察。
 
@@ -260,7 +226,7 @@ consumer的消息消费的偏移类似之前章节Chapter5复制 中讨论的复
 
 举个例子，我们可以获取数据库的修改，并将这些数据修改在搜索索引中重放。如果修改的顺序与数据库中是一致的，那么我们可以预期，搜索索引中的数据与数据库中是一致的。这个过程中，搜索索引，或则其他衍生的数据系统，都是这个数据修改流的消费者，如同下图所示。
 
-![image-20190101213222736](/Users/liangquan/Library/Application Support/typora-user-images/image-20190101213222736.png)
+![image-20190101213222736](http://liang2020.oss-cn-hangzhou.aliyuncs.com/uPic/blog/image-20190101213222736.png)
 
 ### 数据修改捕获的实现
 
@@ -276,25 +242,13 @@ consumer的消息消费的偏移类似之前章节Chapter5复制 中讨论的复
 
 
 
-———————— 第四次递交 分割线———————— 
-
-———————— 第四次递交 分割线———————— 
-
-———————— 第四次递交 分割线———————— 
-
-
-
-
-
-
-
 ## 	事件溯源 Event Sourcing
 
 事件溯源（Event Sourcing）是领域驱动设计（Domain-Driven Design）的一个架构模式。他以事件作为系统的第一公民，业务由事件驱动完成。
 
 以账户余额为例 https://www.imooc.com/article/40858：
 
-![image-20190120203950071](/Users/liangquan/Library/Application Support/typora-user-images/image-20190120203950071.png)
+![image-20190120203950071](http://liang2020.oss-cn-hangzhou.aliyuncs.com/uPic/blog/image-20190120203950071.png)
 
 
 
